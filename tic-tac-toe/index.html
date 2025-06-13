@@ -1,89 +1,105 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<!--
+# This project is based on a public project but has been modified 
+# according to the requirements of the DevOps Level 2 course.
+# Instructor: Washington Valencia
+# Institution: CCTB College
+-->
+<html lang="en">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/11.9.1/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/11.9.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/11.9.1/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/11.9.1/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/11.9.1/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/11.9.1/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/11.9.1/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/11.9.1/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/11.9.1/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/11.9.1/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CCTB - Tic-Tac-Toe</title>
+  <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <link rel="shortcut icon" type="image/x-icon"
+    href="https://canvascctb.s3.ca-central-1.amazonaws.com/account_1/attachments/95/CCTB_favicon.ico" />
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+</head>
+
+<body onload="initialize()">
+  <img class="rounded" src="https://guscanada.com/wp-content/uploads/2021/09/CCTB_logo_1_RGB.png">
+  <h1>Tic-Tac-Toe</h1>
+  <table id="table_game">
+    <tr>
+      <td class="td_game">
+        <div id="cell0" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+      <td class="td_game">
+        <div id="cell1" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+      <td class="td_game">
+        <div id="cell2" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+    </tr>
+    <tr>
+      <td class="td_game">
+        <div id="cell3" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+      <td class="td_game">
+        <div id="cell4" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+      <td class="td_game">
+        <div id="cell5" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+    </tr>
+    <tr>
+      <td class="td_game">
+        <div id="cell6" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+      <td class="td_game">
+        <div id="cell7" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+      <td class="td_game">
+        <div id="cell8" onclick="cellClicked(this.id)" class="fixed"></div>
+      </td>
+    </tr>
+  </table>
+  <div id="restart" title="Start new game" onclick="restartGame(true)"><span
+      style="vertical-align:top;position:relative;top:-10px">#</span></div>
+  <table>
+    <tr>
+      <th class="th_list">Computer</th>
+      <th class="th_list" style="padding-right:10px;padding-left:10px">Draws</th>
+      <th class="th_list">Player</th>
+    </tr>
+    <tr>
+      <td class="td_list" id="computer_score">0</td>
+      <td class="td_list" style="padding-right:10px;padding-left:10px" id="tie_score">0</td>
+      <td class="td_list" id="player_score">0</td>
+    </tr>
+  </table>
+  <!-- The modal dialog for announcing the winner -->
+  <div id="winAnnounce" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('winAnnounce')">&times;</span>
+      <p id="winText"></p>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+  </div>
+  <!-- The dialog for getting feedback from the user -->
+  <div id="userFeedback" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <p id="questionText"></p>
+      <p><button id="yesBtn">Yes</button>&nbsp;<button id="noBtn">No</button></p>
+    </div>
+  </div>
+  <!-- The options dialog -->
+  <div id="optionsDlg" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <h2>Hi, how would you like to play?</h2>
+      <h3>Difficulty:</h3>
+      <label><input type="radio" name="difficulty" id="r0" value="0">easy&nbsp;</label>
+      <label><input type="radio" name="difficulty" id="r1" value="1" checked>hard</label><br>
+      <h3>Play as:</h3>
+      <label><input type="radio" name="player" id="rx" value="x" checked>X (go first)&nbsp;</label>
+      <label><input type="radio" name="player" id="ro" value="o">O<br></label>
+      <p><button id="okBtn" onclick="getOptions()">Play</button></p>
+    </div>
+  </div>
+</body>
+<script src="js.js"></script>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
 </html>
