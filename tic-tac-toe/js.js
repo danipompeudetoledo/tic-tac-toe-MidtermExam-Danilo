@@ -112,8 +112,9 @@ var moves = 0,
         player: 0,
         computer: 0
     },
-    xText = "<span class=\"x\">&times;</class>",
-    oText = "<span class=\"o\">o</class>",
+    xText = "<span class=\"x\">&times;</span>";
+    oText = "<span class=\"o\">o</span>";
+
     playerText = xText,
     computerText = oText,
     difficulty = 1,
